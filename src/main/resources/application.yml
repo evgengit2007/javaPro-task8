@@ -7,7 +7,7 @@ spring:
   application:
     name: limit-core
   datasource:
-    url: jdbc:postgresql://localhost:5432/javaPro
+    url: jdbc:postgresql://localhost:5432/limitsjavapro
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -16,3 +16,9 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: none
+
+service:
+  limits:
+    default:
+      amount: 10000
+      update-period: 0 0 0 * * *

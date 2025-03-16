@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vtb.javaPro.dto.LimitDto;
-import ru.vtb.javaPro.response.PaymentResponse;
+import ru.vtb.javaPro.response.LimitResponse;
 import ru.vtb.javaPro.service.LimitService;
 
 @Slf4j
@@ -19,23 +19,30 @@ public class LimitController {
     }
 
     @PostMapping("/check-limit")
-    public PaymentResponse checkLimit(@RequestBody LimitDto limitDto) {
+    public LimitResponse checkLimit(@RequestBody LimitDto limitDto) {
         log.info("Проверить лимит у user с id: {}, переданная сумма платежа: {}", limitDto.userId(), limitDto.amount());
         Boolean checkLimit = limitService.checkLimit(limitDto.userId(), limitDto.amount());
-        return new PaymentResponse(checkLimit, "message");
+        return new LimitResponse(checkLimit);
     }
 
     @PostMapping("/block-amount")
-    public PaymentResponse blockAmount(@RequestBody LimitDto limitDto) {
+    public LimitResponse blockAmount(@RequestBody LimitDto limitDto) {
         log.info("Холдировать сумму у пользователя с id: {}, переданная сумма: {}", limitDto.userId(), limitDto.amount());
         Boolean boolBlockAmount = limitService.blockAmount(limitDto.userId(), limitDto.amount());
-        return new PaymentResponse(boolBlockAmount, "message");
+        return new LimitResponse(boolBlockAmount);
     }
 
     @PostMapping("/rollback")
-    public PaymentResponse rollback(@RequestBody LimitDto limitDto) {
+    public LimitResponse rollback(@RequestBody LimitDto limitDto) {
         log.info("Восстановить сумму холдирования у пользователя с id: {}, переданная сумма {}", limitDto.userId(), limitDto.amount());
         Boolean boolRollback = limitService.rollback(limitDto.userId(), limitDto.amount());
-        return new PaymentResponse(boolRollback, "message");
+        return new LimitResponse(boolRollback);
+    }
+
+    @PostMapping("/confirm-amount")
+    public LimitResponse confirmAmount(@RequestBody LimitDto limitDto) {
+        log.info("Подтверждение платежа у пользователя с id: {}, сумма {}", limitDto.userId(), limitDto.amount());
+        Boolean boolConfirmAmount = limitService.confirmAmount(limitDto.userId(), limitDto.amount());
+        return new LimitResponse(boolConfirmAmount);
     }
 }
