@@ -21,4 +21,4 @@ service:
   limits:
     default:
       amount: 10000
-      update-period: 0 0 0 * * *
+      update-limit: 0 0 0 * * *

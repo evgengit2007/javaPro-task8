@@ -1,5 +1,6 @@
 package ru.vtb.javaPro.scheduler;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
@@ -28,8 +29,9 @@ public class SchedulerConfig {
         this.limitProperties = limitProperties;
     }
 
-    @Scheduled(cron = "${service.limits.default.update-period}")
+    @Scheduled(cron = "${service.limits.default.update-limit}")
     @Async
+    @Transactional
     public void resetLimitDefault() {
         log.info("Запустился планировщик");
         List<Limits> limitsList = limitRepository.findAll();

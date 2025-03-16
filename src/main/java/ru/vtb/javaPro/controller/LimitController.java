@@ -21,28 +21,28 @@ public class LimitController {
     @PostMapping("/check-limit")
     public LimitResponse checkLimit(@RequestBody LimitDto limitDto) {
         log.info("Проверить лимит у user с id: {}, переданная сумма платежа: {}", limitDto.userId(), limitDto.amount());
-        Boolean checkLimit = limitService.checkLimit(limitDto.userId(), limitDto.amount());
+        Boolean checkLimit = limitService.checkLimit(limitDto);
         return new LimitResponse(checkLimit);
     }
 
     @PostMapping("/block-amount")
     public LimitResponse blockAmount(@RequestBody LimitDto limitDto) {
         log.info("Холдировать сумму у пользователя с id: {}, переданная сумма: {}", limitDto.userId(), limitDto.amount());
-        Boolean boolBlockAmount = limitService.blockAmount(limitDto.userId(), limitDto.amount());
+        Boolean boolBlockAmount = limitService.blockAmount(limitDto);
         return new LimitResponse(boolBlockAmount);
     }
 
     @PostMapping("/rollback")
     public LimitResponse rollback(@RequestBody LimitDto limitDto) {
         log.info("Восстановить сумму холдирования у пользователя с id: {}, переданная сумма {}", limitDto.userId(), limitDto.amount());
-        Boolean boolRollback = limitService.rollback(limitDto.userId(), limitDto.amount());
+        Boolean boolRollback = limitService.rollback(limitDto);
         return new LimitResponse(boolRollback);
     }
 
     @PostMapping("/confirm-amount")
     public LimitResponse confirmAmount(@RequestBody LimitDto limitDto) {
         log.info("Подтверждение платежа у пользователя с id: {}, сумма {}", limitDto.userId(), limitDto.amount());
-        Boolean boolConfirmAmount = limitService.confirmAmount(limitDto.userId(), limitDto.amount());
+        Boolean boolConfirmAmount = limitService.confirmAmount(limitDto);
         return new LimitResponse(boolConfirmAmount);
     }
 }
