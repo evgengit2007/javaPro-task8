@@ -3,8 +3,8 @@ DROP TABLE IF EXISTS public.limits CASCADE;
 CREATE TABLE public.limits
 (id bigserial PRIMARY KEY,
 userid bigint unique,
-limit_summa real,
-block_amount real
+limit_summa real not null,
+block_amount real not null
 );
 CREATE INDEX idx_limits_id ON public.limits(id);
 

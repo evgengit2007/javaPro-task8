@@ -1,8 +1,11 @@
 package ru.vtb.javaPro.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.vtb.javaPro.config.properties.LimitProperties;
 import ru.vtb.javaPro.dto.LimitDto;
@@ -11,6 +14,7 @@ import ru.vtb.javaPro.exception.ExceptionRequest;
 import ru.vtb.javaPro.repository.LimitRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -30,9 +34,6 @@ public class LimitService {
         Limits limits;
         try {
             limits = limitRepository.findById(limitDto.userId()).orElseThrow(EntityNotFoundException::new);
-            if ((limits.getLimitSumma() == null) || (limits.getBlockAmount() == null)) {
-                throw new ExceptionRequest(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка проверки: лимит или сумма блокировки пустые");
-            }
         } catch (EntityNotFoundException exception) {
             limits = new Limits();
             limits.setUserId(limitDto.userId());
@@ -99,4 +100,17 @@ public class LimitService {
         limitRepository.save(limits);
         return true;
     }
+
+    @Scheduled(cron = "${service.limits.default.update-limit}")
+    @Async
+    @Transactional
+    public void resetLimitDefault() {
+        log.info("Запустился планировщик");
+        List<Limits> limitsList = limitRepository.findAll();
+        for (Limits limits: limitsList) {
+            limits.setLimitSumma(limitProperties.getAmount());
+        }
+        limitRepository.saveAll(limitsList);
+    }
+
 }
