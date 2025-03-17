@@ -33,9 +33,9 @@ public class LimitController {
     }
 
     @PostMapping("/rollback")
-    public LimitResponse rollback(@RequestBody LimitDto limitDto) {
+    public LimitResponse rollbackAmount(@RequestBody LimitDto limitDto) {
         log.info("Восстановить сумму холдирования у пользователя с id: {}, переданная сумма {}", limitDto.userId(), limitDto.amount());
-        Boolean boolRollback = limitService.rollback(limitDto);
+        Boolean boolRollback = limitService.rollbackAmount(limitDto);
         return new LimitResponse(boolRollback);
     }
 

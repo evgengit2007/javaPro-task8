@@ -65,7 +65,7 @@ public class LimitService {
         }
     }
 
-    public Boolean rollback(LimitDto limitDto) {
+    public Boolean rollbackAmount(LimitDto limitDto) {
         Limits limits = getLimits(limitDto);
         if (limits.getBlockAmount() == BigDecimal.ZERO) {
             throw new ExceptionRequest("Восстановить лимит невозможно. Сумма заблокированных средств равна нулю");
